@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Restaurant Menu Application | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.4 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/AdminLTE.min.css') }}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/iCheck/square/blue.css') }}">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+	</script>
+	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+	</script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <div id="result"></div>
+
+<script>
+		function signInCallback(authResult) {
+		  if (authResult['code']) {
+		    // Hide the sign-in button now that the user is authorized
+		    $('#signinButton').attr('style', 'display: none');
+		    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+		    $.ajax({
+		      type: 'POST',
+		      url: '/gconnect?state={{STATE}}',
+		      processData: false,
+		      data: authResult['code'],
+		      contentType: 'application/octet-stream; charset=utf-8',
+		      success: function(result) {
+		        // Handle or verify the server response if necessary.
+		        if (result) {
+		          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+		         setTimeout(function() {
+		          window.location.href = "/restaurants";
+		         }, 4000);
+		          
+		      } else if (authResult['error']) {
+		    console.log('There was an error: '+  authResult['error']);
+		  } else {
+		        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+		         }
+		      }
+		      
+		  }); } }
+</script>
+
+<!--  END OF GOOGLE PLUS SIGN UP  -->
+<br>
+<!-- FACEBOOK SIGN IN -->
+
+	<script>
+
+			window.fbAsyncInit = function() {
+		  FB.init({
+		    appId      : '1609401772681206',
+		    cookie     : true,  // enable cookies to allow the server to access 
+		                        // the session
+		    xfbml      : true,  // parse social plugins on this page
+		    version    : 'v2.2' // use version 2.2
+		  });
+		  };
+		  // Load the SDK asynchronously
+		  (function(d, s, id) {
+		    var js, fjs = d.getElementsByTagName(s)[0];
+		    if (d.getElementById(id)) return;
+		    js = d.createElement(s); js.id = id;
+		    js.src = "//connect.facebook.net/en_US/sdk.js";
+		    fjs.parentNode.insertBefore(js, fjs);
+		  }(document, 'script', 'facebook-jssdk'));
+		  // Here we run a very simple test of the Graph API after login is
+		  // successful.  See statusChangeCallback() for when this call is made.
+		  function sendTokenToServer() {
+		    var access_token = FB.getAuthResponse()['accessToken'];
+		    console.log(access_token)
+		    console.log('Welcome!  Fetching your information.... ');
+		    FB.api('/me', function(response) {
+		      console.log('Successful login for: ' + response.name);
+		     $.ajax({
+		      type: 'POST',
+		      url: '/fbconnect?state={{STATE}}',
+		      processData: false,
+		      data: access_token,
+		      contentType: 'application/octet-stream; charset=utf-8',
+		      success: function(result) {
+		        // Handle or verify the server response if necessary.
+		        if (result) {
+		          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+		         setTimeout(function() {
+		          window.location.href = "/restaurants";
+		         }, 4000);
+		          
+		      } else {
+		        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+		         }
+		      }
+		      
+		  });
+		    });
+		  }
+
+	</script>
+
+  <body class="login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="../../index2.html"><b>Restaurant Menu Application</a>
+      </div><!-- /.login-logo -->
+      <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+
+        <div class="social-auth-links text-center">
+          <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+          <a href="javascript:sendTokenToServer()" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
+          </fb:login-button>
+          <div id="signinButton">
+		<span class="g-signin"
+			data-scope="openid email"
+			data-clientid="911551198530-dnhv19fdne8hi31l19d5d5qfkgq3j2en.apps.googleusercontent.com"
+			data-redirecturi="postmessage"
+			data-accesstype="offline"
+			data-cookiepolicy="single_host_origin"
+			data-callback="signInCallback"
+			data-approvalprompt="force">
+		</span>
+
+	</div>
+        </div><!-- /.social-auth-links -->
+
+      </div><!-- /.login-box-body -->
+    </div><!-- /.login-box -->
+
+    <!-- jQuery 2.1.4 -->
+    <script src="{{ url_for('static', filename='plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
+    <!-- Bootstrap 3.3.4 -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- iCheck -->
+    <script src="{{ url_for('static', filename='plugins/iCheck/icheck.min.js') }}"></script>
+  </body>
+</html>
