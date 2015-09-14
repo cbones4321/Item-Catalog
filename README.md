@@ -24,3 +24,15 @@ This application uses the Flask framework. The static folder contains all of the
 Project.py
 --------
 Contains all of the back-end code for this application.
+
+fb_client_secrents.json
+--------
+Contains necessary information for Facebook Login.
+
+client_secrets.json
+--------
+Contains necessary information for Google Plus login.
+
+lotsofmenuitems.py
+--------
+This contains sample data for the application and can be ran to add dummy data.
